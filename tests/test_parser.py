@@ -15,6 +15,12 @@ def parser():
 
 def test_parse(parser):
 
+    def func(x):
+        # type: (int) -> int
+        return x
+
+    assert parser.parse(func) == {'args': 'int', 'return': 'int'}
+
     def a_test_func(x, y):
         # type: (int, int) -> int
         return x + y
