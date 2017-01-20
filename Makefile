@@ -1,10 +1,10 @@
 pep8:
-	flake8 type_doctor tests
+	flake8 takayi tests
 
 test: pep8
 	rm -rf .cache
 	mkdir -p .build
-	py.test tests -rfExswX --duration=10 --junitxml=.build/unittest.xml --cov type_doctor --cov-report xml -n 4
+	py.test tests -rfExswX --duration=10 --junitxml=.build/unittest.xml --cov takayi --cov-report xml -n 4
 	find . -name '*.pyc' -delete
 	find . -name '__pycache__' -type d -delete
 
