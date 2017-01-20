@@ -19,7 +19,10 @@ def test_parse(parser):
         # type: (int) -> int
         return x
 
-    assert parser.parse(func) == {'args': 'int', 'return': 'int'}
+    hints = parser.parse(func)
+    assert str(hints) == "func(int) -> int"
+    assert hints.args == [int]
+    assert hints.returns == [int]
 
     def a_test_func(x, y):
         # type: (int, int) -> int
@@ -29,9 +32,17 @@ def test_parse(parser):
         # type: (int, str, int) -> int, str
         return 'hello worlr'
 
-    assert parser.parse(a_test_func) == {'args': 'int, int', 'return': 'int'}
-    assert parser.parse(another_test_func) == \
-        {'args': 'int, str, int', 'return': 'int, str'}
+    h_a = parser.parse(a_test_func)
+    assert str(h_a) == \
+        "a_test_func(int, int) -> int"
+    assert h_a.args == [int, int]
+    assert h_a.returns == [int]
+
+    h_b = parser.parse(another_test_func)
+    assert str(h_b) == \
+        "another_test_func(int, str, int) -> int, str"
+    assert h_b.args == [int, str, int]
+    assert h_b.returns == [int, str]
 
     def error_test_func(x):
         # type: str -> (str)

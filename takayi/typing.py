@@ -63,6 +63,7 @@ class _BaseType(object):
 
 
 def is_type(obj, ins):
+    assert isinstance(ins, _BaseType), "Invalid type: {}".format(ins)
     t_type = ins.t_type
     t_name = ins.t_name
     if t_name == 'Callable':
@@ -72,6 +73,7 @@ def is_type(obj, ins):
     return isinstance(obj, t_type)
 
 
+Int = _BaseType('Int')
 Any = _BaseType('Any')
 String = _BaseType('String')
 List = _BaseType('List')

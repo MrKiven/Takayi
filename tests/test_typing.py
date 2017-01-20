@@ -2,6 +2,8 @@
 
 from __future__ import absolute_import
 
+import pytest
+
 from takayi.typing import Any, List, Mapping, Callable, Sequence, is_type,\
     String, AnyObject
 
@@ -22,6 +24,9 @@ def test_is_type():
     a_list = ['hello', 'world']
     a_mapping = {'hello': 'world'}
     a_str = 'hello world'
+
+    with pytest.raises(AssertionError):
+        is_type(a_str, str)
 
     def func():
         pass
