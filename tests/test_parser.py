@@ -5,7 +5,7 @@ from __future__ import absolute_import
 import pytest
 
 from takayi.parser import Parser
-from takayi.exc import ParseTypeError
+from takayi.exc import ParseTypeError, InvalidHintsError
 
 
 @pytest.fixture
@@ -39,3 +39,10 @@ def test_parse(parser):
 
     with pytest.raises(ParseTypeError):
         parser.parse(error_test_func)
+
+    def invalid_hints(x, y):
+        # hahah
+        return None
+
+    with pytest.raises(InvalidHintsError):
+        parser.parse(invalid_hints)

@@ -7,3 +7,7 @@ class TypeHintsBaseError(Exception):
 
 class ParseTypeError(TypeHintsBaseError):
     pass
+
+
+class InvalidHintsError(TypeHintsBaseError):
+    pass

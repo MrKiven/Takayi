@@ -3,7 +3,7 @@
 import inspect
 import re
 
-from takayi.exc import ParseTypeError
+from takayi.exc import ParseTypeError, InvalidHintsError
 
 """
     def ham(x, y):
@@ -14,12 +14,6 @@ from takayi.exc import ParseTypeError
         type: (int, str) -> str
 
 """
-
-parse_type_hints = re.compile(r'''
-(?P<start>[# type:]+)\(
-(?P<args>[\w+, ]+)\).*->.*?
-(?P<return>[\w+, ]+)
-''', re.X)
 
 
 class Parser(object):
@@ -35,6 +29,8 @@ class Parser(object):
     def parse(self, func):
         """Parse first line of 'docstring'"""
         type_docs = inspect.getsourcelines(func)[0][1].strip()
+        if not type_docs.startswith('# type:'):
+            raise InvalidHintsError("First line must be start like: `# type:`")
         return self._match_types(type_docs)
 
     def _match_types(self, type_docs):
