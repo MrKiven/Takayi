@@ -4,13 +4,18 @@
   https://hg.python.org/cpython/file/3.6/Lib/typing.py
 """
 
+
+class AnyObject(object):
+    pass
+
+
 _transition = {
     'Int': int,
     'List': list,
     'Dict': dict,
-    'String': str,  # basestring
+    'String': (str, basestring),
     'Mapping': dict,
-    'Any': (list, dict, str, dict, int),
+    'Any': AnyObject,
     'Set': set,
     'Callable': callable,
     'Tuple': tuple,
@@ -24,9 +29,6 @@ class TypingMeta(type):
     def __new__(cls, name, bases, attrs):
         attrs['_typing'] = 'Typing'
         return super(TypingMeta, cls).__new__(cls, name, bases, attrs)
-
-    def _equal(self, name):
-        pass
 
 
 class TypeVar(object):
@@ -61,17 +63,21 @@ class _BaseType(object):
 
 
 def is_type(obj, ins):
-    try:
-        t_type = ins.t_type
-    except AttributeError:
-        t_type = ins
+    t_type = ins.t_type
+    t_name = ins.t_name
+    if t_name == 'Callable':
+        return callable(obj)
+    if t_name == 'Any':
+        return True
     return isinstance(obj, t_type)
 
 
 Any = _BaseType('Any')
+String = _BaseType('String')
 List = _BaseType('List')
 Mapping = _BaseType('Mapping')
 Set = _BaseType('Set')
 Callable = _BaseType('Callable')
 Tuple = _BaseType('Tuple')
 Iter = _BaseType('Iterable')
+Sequence = _BaseType('Sequence')
