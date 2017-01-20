@@ -15,16 +15,20 @@ from takayi.exc import ParseTypeError, InvalidHintsError
 
 """
 
+START = 'start'
+
+parse_pattern = re.compile(r'''
+    (?P<{}>[# type:]+)\(
+    (?P<args>[\w+, ]+)\).?->.?
+    (?P<return>[\w+, ]*)
+    '''.format(START), re.X)
+
 
 class Parser(object):
 
-    def __init__(self):
-        self._start = 'start'
-        self.parse_pattern = re.compile(r'''
-            (?P<{}>[# type:]+)\(
-            (?P<args>[\w+, ]+)\).?->.?
-            (?P<return>[\w+, ]*)
-            '''.format(self._start), re.X)
+    def __init__(self, pattern=parse_pattern):
+        self._start = START
+        self.pattern = pattern
 
     def parse(self, func):
         """Parse first line of 'docstring'"""
@@ -39,11 +43,12 @@ class Parser(object):
         :return: a dict, e.g.
             {'start': '# type: ', 'args': 'int, int', 'return': 'int'}
         """
-        match = self.parse_pattern.match(type_docs)
+        match = self.pattern.match(type_docs)
         result = None
         try:
             result = match.groupdict()
             if self._start in result:
+                # useless key: `start`, pop it
                 result.pop(self._start)
             return result
         except KeyError:
