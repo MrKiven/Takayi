@@ -4,8 +4,8 @@ from __future__ import absolute_import
 
 import pytest
 
-from type_doctor.parser import Parser
-from type_doctor.exc import ParseTypeError
+from takayi.parser import Parser
+from takayi.exc import ParseTypeError
 
 
 @pytest.fixture

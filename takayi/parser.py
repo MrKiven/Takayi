@@ -3,7 +3,7 @@
 import inspect
 import re
 
-from type_doctor.exc import ParseTypeError
+from takayi.exc import ParseTypeError
 
 """
     def ham(x, y):

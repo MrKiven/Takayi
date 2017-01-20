@@ -3,7 +3,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="type-doctor",
+    name="takayi",
     version='0.0.1',
     long_description=open('README.md').read(),
     author="Kiven",
