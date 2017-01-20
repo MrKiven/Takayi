@@ -104,14 +104,3 @@ class Parser(object):
             return result
         except BaseException:
             raise ParseTypeError("Invalid type hints: {!r} ".format(type_docs))
-
-
-def test(x, y):
-    # type: (int, int) -> int
-    return x + y
-
-parser = Parser()
-hints = parser.parse(test)
-print hints
-print hints.args
-print hints.returns
