@@ -1,6 +1,8 @@
 # Takayi
 Type hints for python 2.X
 
+`takayi` means `high` in japanese..
+
 ## Usage
 
 ```python
