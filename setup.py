@@ -11,7 +11,7 @@ with open('requirements.txt') as f:
 
 setup(
     name="takayi",
-    version="0.1.2",
+    version="0.2.0",
     description="Type hints for python 2.x",
     long_description=open('README.md').read(),
     author="Kiven",
