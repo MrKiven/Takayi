@@ -10,7 +10,7 @@ from takayi.parser import Parser, typehints
 
 parser = Parser()
 
-
+# ==================================================
 @typehints(parser)
 def get_sum(x, y):
     # type: (int, int) -> int
@@ -20,16 +20,20 @@ _sum = get_sum(1, 2)  # -> 3
 
 # AssertionError: Parameter err: except => [<type 'int'>, <type 'int'>], actually => [<type 'int'>, <type 'str'>]
 _err_sum = get_sum(1, 'hello')
+# ==================================================
 
 
+# ==================================================
 @typehints(parser)
 def test(x, y=1)
     # type: (int, y: int) -> int
     return x + y
 
 assert test(1, y=10) == 11
+# ==================================================
 
 
+# ==================================================
 class Node(object): pass
 
 node = Node()
@@ -39,6 +43,7 @@ node = Node()
 def get_node():
     # type: () -> Node
     return node
+# ==================================================
 ```
 
 ## TODO
