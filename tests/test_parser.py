@@ -85,3 +85,12 @@ def test_decorator(parser):
     assert test(1, 'test') == (1, 'test')
     with pytest.raises(AssertionError):
         assert func('test', 1)
+
+    @typehints(parser)
+    def get_str(x, y):
+        # type: (int, str) -> str
+        return y
+
+    assert get_str(1, 'hello') == 'hello'
+    with pytest.raises(AssertionError):
+        assert get_str('hello', 1)

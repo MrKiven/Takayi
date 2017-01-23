@@ -81,10 +81,9 @@ def typehints(parser):
                     hints.args, actually_args)
 
             ret = func(*args)
-            try:
-                iter(ret)
+            if isinstance(ret, (tuple, list, dict, set)):
                 actually_returns = map(lambda x: type(x), ret)
-            except TypeError:
+            else:
                 actually_returns = map(lambda x: type(x), [ret])
             assert actually_returns == hints.returns, \
                 "Return err: except => {}, actually => {}".format(
