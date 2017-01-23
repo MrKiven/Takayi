@@ -112,7 +112,7 @@ def typehints(parser, attach_cls=None):
                 actually_args += map(lambda x: type(x), kwargs.itervalues())
             if actually_args:
                 assert actually_args == hints.args, \
-                    "Parameter err: except => {}, actually => {}".format(
+                    "Parameter err: expect => {}, actually => {}".format(
                         hints.args, actually_args)
 
             ret = func(*args, **kwargs)
@@ -121,7 +121,7 @@ def typehints(parser, attach_cls=None):
             else:
                 actually_returns = map(lambda x: type(x), [ret])
             assert actually_returns == hints.returns, \
-                "Return err: except => {}, actually => {}".format(
+                "Return err: expect => {}, actually => {}".format(
                     hints.returns, actually_returns)
 
             return ret
