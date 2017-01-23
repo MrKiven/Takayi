@@ -21,6 +21,7 @@ def test_parse(parser):
 
     hints = parser.parse(func)
     assert str(hints) == "func(int) -> int"
+    assert hints.arg_types == ['int']
     assert hints.args == [int]
     assert hints.returns == [int]
 
@@ -59,6 +60,27 @@ def test_parse(parser):
         parser.parse(invalid_hints)
 
 
+def test_custom_type(parser):
+
+    class Test(object):
+        pass
+
+    t = Test()
+
+    @typehints(parser, attach_cls=Test)
+    def test(x, y):
+        # type: (int, int) -> Test
+        return t
+
+    @typehints(parser, attach_cls=Test)
+    def get_test():
+        # type: () -> Test
+        return t
+
+    assert isinstance(test(1, 1), Test)
+    assert isinstance(get_test(), Test)
+
+
 def test_kwargs(parser):
     # not support yet..
 
@@ -68,6 +90,17 @@ def test_kwargs(parser):
 
 
 def test_decorator(parser):
+
+    @typehints(parser)
+    def no_args():
+        # type: () -> int
+        return 1
+
+    @typehints(parser)
+    def no_return():  # do nothing
+        pass
+
+    assert no_args() == 1
 
     @typehints(parser)
     def func(x, y):
