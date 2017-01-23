@@ -1,6 +1,8 @@
 # Takayi
 Type hints for python 2.X
 
+`takayi` means `high` in japanese..
+
 ## Usage
 
 ```python
@@ -18,6 +20,17 @@ _sum = get_sum(1, 2)  # -> 3
 
 # ->  AssertionError: Parameter err: except => [<type 'int'>, <type 'int'>], actually => [<type 'int'>, <type 'str'>]
 _err_sum = get_sum(1, 'hello')
+
+
+class Node(object): pass
+
+node = Node()
+
+
+@typehints(parser, attach_cls=Test)
+def get_node():
+    # type: () -> Node
+    return node
 ```
 
 ## TODO

@@ -20,7 +20,7 @@ START = 'start'
 
 parse_pattern = re.compile(r'''
     (?P<{}>[# type:]+)\(
-    (?P<args>[\w+, ]+)\).?->.?
+    (?P<args>[\w+, ]*)\).?->.?
     (?P<return>[\w+, ]*)
     '''.format(START), re.X)
 
@@ -40,14 +40,26 @@ class TypeHints(object):
         self.func_name = func_name
         self.arg_types = arg_types
         self.return_types = return_types
+        self.transmit_mapping = _transmit_mapping
+
+    def attach_type(self, name, t_type):
+        if name not in self.transmit_mapping:
+            self.transmit_mapping[name] = t_type
+
+    def _get_type(self, t_type):
+        try:
+            return self.transmit_mapping[t_type]
+        except KeyError:
+            raise TypeError("No such type: {!r}, you should attach this type "
+                            "to parser first".format(t_type))
 
     @property
     def args(self):
-        return map(lambda t: _transmit_mapping[t], self.arg_types)
+        return map(lambda t: self._get_type(t), self.arg_types)
 
     @property
     def returns(self):
-        return map(lambda t: _transmit_mapping[t], self.return_types)
+        return map(lambda t: self._get_type(t), self.return_types)
 
     @property
     def typehints(self):
@@ -70,15 +82,34 @@ class TypeHints(object):
         return str(self)
 
 
-def typehints(parser):
+def typehints(parser, attach_cls=None):
+    """Decorator for typehints current function.
+
+    Example:
+        parser = Parser()
+
+        class Node(object): pass
+        node = Node()
+
+        @typehints(attach_cls=Node)
+        def get_node(what):
+            # type: (str) -> Node
+            return node
+
+    parser: instance of :claass:`Parser`
+    attach_cls: custom class
+    """
     def _(func):
         @functools.wraps(func)
         def __(*args):
             hints = parser.parse(func, deco=True)
+            if attach_cls:
+                hints.attach_type(attach_cls.__name__, attach_cls)
             actually_args = map(lambda x: type(x), args)
-            assert actually_args == hints.args, \
-                "Parameter err: except => {}, actually => {}".format(
-                    hints.args, actually_args)
+            if actually_args:
+                assert actually_args == hints.args, \
+                    "Parameter err: except => {}, actually => {}".format(
+                        hints.args, actually_args)
 
             ret = func(*args)
             if isinstance(ret, (tuple, list, dict, set)):
@@ -99,6 +130,7 @@ class Parser(object):
     def __init__(self, pattern=parse_pattern):
         self._start = START
         self.pattern = pattern
+        self.attached_types = {}
 
     def parse(self, func, deco=False):
         """Parse first line of 'docstring'
