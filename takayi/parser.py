@@ -2,6 +2,7 @@
 
 import inspect
 import re
+import functools
 
 from takayi.exc import ParseTypeError, InvalidHintsError
 
@@ -48,6 +49,10 @@ class TypeHints(object):
     def returns(self):
         return map(lambda t: _transmit_mapping[t], self.return_types)
 
+    @property
+    def typehints(self):
+        return self
+
     def __str__(self):
         """
         e.g. test(int, int) -> int
@@ -65,15 +70,44 @@ class TypeHints(object):
         return str(self)
 
 
+def typehints(parser):
+    def _(func):
+        @functools.wraps(func)
+        def __(*args):
+            hints = parser.parse(func, deco=True)
+            actually_args = map(lambda x: type(x), args)
+            assert actually_args == hints.args, "Parameter err: except => {}, "
+            "actually => {}".format(hints.args, actually_args)
+
+            ret = func(*args)
+            try:
+                iter(ret)
+                actually_returns = map(lambda x: type(x), ret)
+            except TypeError:
+                actually_returns = map(lambda x: type(x), [ret])
+            assert actually_returns == hints.returns, "Return err: except => "
+            "{}, actually => {}".format(hints.returns, actually_returns)
+
+            return ret
+        return __
+    return _
+
+
 class Parser(object):
 
     def __init__(self, pattern=parse_pattern):
         self._start = START
         self.pattern = pattern
 
-    def parse(self, func):
-        """Parse first line of 'docstring'"""
-        type_docs = inspect.getsourcelines(func)[0][1].strip()
+    def parse(self, func, deco=False):
+        """Parse first line of 'docstring'
+
+        :param func: function to parse
+        :param deco: Only use when using `typehints` decorator
+        :return: :class:`TypeHints`
+        """
+        line = 2 if deco else 1
+        type_docs = inspect.getsourcelines(func)[0][line].strip()
         if not type_docs.startswith('# type:'):
             raise InvalidHintsError("First line must be start like: `# type:`")
         drafts = self._match_types(type_docs)

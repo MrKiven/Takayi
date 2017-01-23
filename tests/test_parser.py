@@ -4,7 +4,7 @@ from __future__ import absolute_import
 
 import pytest
 
-from takayi.parser import Parser
+from takayi.parser import Parser, typehints
 from takayi.exc import ParseTypeError, InvalidHintsError
 
 
@@ -57,3 +57,31 @@ def test_parse(parser):
 
     with pytest.raises(InvalidHintsError):
         parser.parse(invalid_hints)
+
+
+def test_kwargs(parser):
+    # not support yet..
+
+    def func(x, y=1):
+        # type: (int, y: int) -> int
+        return x + y
+
+
+def test_decorator(parser):
+
+    @typehints(parser)
+    def func(x, y):
+        # type: (int, int) -> int
+        return x + y
+
+    assert func(1, 2) == 3
+    with pytest.raises(AssertionError):
+        assert func('t', 1)
+
+    @typehints(parser)
+    def test(x, y):
+        # type: (int, str) -> int, str
+        return x, y
+    assert test(1, 'test') == (1, 'test')
+    with pytest.raises(AssertionError):
+        assert func('test', 1)
