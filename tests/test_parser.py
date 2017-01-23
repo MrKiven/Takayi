@@ -5,7 +5,8 @@ from __future__ import absolute_import
 import pytest
 
 from takayi.parser import Parser, typehints
-from takayi.exc import ParseTypeError, InvalidHintsError
+from takayi.exc import ParseTypeError, InvalidHintsError, \
+    ParameterTypeError, ReturnTypeError
 
 
 @pytest.fixture
@@ -90,9 +91,9 @@ def test_kwargs(parser):
         return x + y
 
     assert func(1, y=2) == 3
-    with pytest.raises(AssertionError):
+    with pytest.raises(ParameterTypeError):
         assert func(1, y='hello')
-    with pytest.raises(AssertionError):
+    with pytest.raises(ParameterTypeError):
         assert func('hello', y=10)
 
 
@@ -115,7 +116,7 @@ def test_decorator(parser):
         return x + y
 
     assert func(1, 2) == 3
-    with pytest.raises(AssertionError):
+    with pytest.raises(ParameterTypeError):
         assert func('t', 1)
 
     @typehints(parser)
@@ -123,7 +124,7 @@ def test_decorator(parser):
         # type: (int, str) -> int, str
         return x, y
     assert test(1, 'test') == (1, 'test')
-    with pytest.raises(AssertionError):
+    with pytest.raises(ParameterTypeError):
         assert func('test', 1)
 
     @typehints(parser)
@@ -132,5 +133,12 @@ def test_decorator(parser):
         return y
 
     assert get_str(1, 'hello') == 'hello'
-    with pytest.raises(AssertionError):
+    with pytest.raises(ParameterTypeError):
         assert get_str('hello', 1)
+
+    @typehints(parser)
+    def wrong_return():
+        # type: () -> int
+        return 'hello'
+    with pytest.raises(ReturnTypeError):
+        assert wrong_return()
