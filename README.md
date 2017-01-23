@@ -27,7 +27,7 @@ class Node(object): pass
 node = Node()
 
 
-@typehints(parser, attach_cls=Test)
+@typehints(parser, attach_cls=Node)
 def get_node():
     # type: () -> Node
     return node
