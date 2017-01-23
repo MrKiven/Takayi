@@ -4,7 +4,8 @@ import inspect
 import re
 import functools
 
-from takayi.exc import ParseTypeError, InvalidHintsError
+from .exc import ParseTypeError, InvalidHintsError, \
+    ParameterTypeError, ReturnTypeError
 
 """
     def ham(x, y):
@@ -101,9 +102,9 @@ def typehints(parser, attach_cls=None):
     parser: instance of :claass:`Parser`
     attach_cls: custom class
     """
-    def _(func):
+    def mid_func(func):
         @functools.wraps(func)
-        def __(*args, **kwargs):
+        def wrapper(*args, **kwargs):
             hints = parser.parse(func, deco=True)
             if attach_cls:
                 hints.attach_type(attach_cls.__name__, attach_cls)
@@ -111,22 +112,24 @@ def typehints(parser, attach_cls=None):
             if kwargs:
                 actually_args += map(lambda x: type(x), kwargs.itervalues())
             if actually_args:
-                assert actually_args == hints.args, \
-                    "Parameter err: expect => {}, actually => {}".format(
-                        hints.args, actually_args)
+                if not actually_args == hints.args:
+                    raise ParameterTypeError(
+                        "Expect => {}, Actually => {}".format(
+                            hints.args, actually_args))
 
             ret = func(*args, **kwargs)
             if isinstance(ret, (tuple, list, dict, set)):
                 actually_returns = map(lambda x: type(x), ret)
             else:
                 actually_returns = map(lambda x: type(x), [ret])
-            assert actually_returns == hints.returns, \
-                "Return err: expect => {}, actually => {}".format(
-                    hints.returns, actually_returns)
+            if not actually_returns == hints.returns:
+                raise ReturnTypeError(
+                    "Expect => {}, Actually => {}".format(
+                        hints.returns, actually_returns))
 
             return ret
-        return __
-    return _
+        return wrapper
+    return mid_func
 
 
 class Parser(object):

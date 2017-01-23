@@ -11,3 +11,11 @@ class ParseTypeError(TypeHintsBaseError):
 
 class InvalidHintsError(TypeHintsBaseError):
     pass
+
+
+class ParameterTypeError(TypeHintsBaseError):
+    pass
+
+
+class ReturnTypeError(TypeHintsBaseError):
+    pass

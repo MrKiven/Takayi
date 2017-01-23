@@ -18,7 +18,7 @@ def get_sum(x, y):
 
 _sum = get_sum(1, 2)  # -> 3
 
-# AssertionError: Parameter err: expect => [<type 'int'>, <type 'int'>], actually => [<type 'int'>, <type 'str'>]
+# takayi.exc.ParameterTypeError: Expect => [<type 'int'>, <type 'int'>], Actually => [<type 'int'>, <type 'str'>]
 _err_sum = get_sum(1, 'hello')
 
 
