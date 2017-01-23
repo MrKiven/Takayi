@@ -11,12 +11,12 @@ with open('requirements.txt') as f:
 
 setup(
     name="takayi",
-    version="0.3.0",
+    version="0.3.1",
     description="Type hints for python 2.x",
     long_description=open('README.md').read(),
     author="Kiven",
     author_email="kiven.mr@gmail.com",
-    url="https://github.com/MrKiven/type-doctor",
+    url="https://github.com/MrKiven/Takayi",
     packages=find_packages(),
     package_data={"": ["LICENSE"], "veskit": data},
     tests_require=[
