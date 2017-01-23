@@ -11,7 +11,7 @@ with open('requirements.txt') as f:
 
 setup(
     name="takayi",
-    version='0.0.1',
+    version='0.1.0',
     long_description=open('README.md').read(),
     author="Kiven",
     author_email="kiven.mr@gmail.com",
