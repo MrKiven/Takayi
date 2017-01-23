@@ -23,3 +23,4 @@ _err_sum = get_sum(1, 'hello')
 ## TODO
 
 - [ ] Support kwargs type check
+- [ ] More types. FYI: [pep484](https://www.python.org/dev/peps/pep-0484/)
