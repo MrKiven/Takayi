@@ -121,7 +121,7 @@ def test_decorator(parser):
 
     @typehints(parser)
     def test(x, y):
-        # type: (int, str) -> int, str
+        # type: (int, str) -> tuple
         return x, y
     assert test(1, 'test') == (1, 'test')
     with pytest.raises(ParameterTypeError):
@@ -142,3 +142,20 @@ def test_decorator(parser):
         return 'hello'
     with pytest.raises(ReturnTypeError):
         assert wrong_return()
+
+
+def test_iterable_struct(parser):
+
+    @typehints(parser)
+    def get_books(num=2):
+        # type: (num: int) -> list
+        return [i for i in xrange(num)]
+
+    assert get_books() == [0, 1]
+    assert get_books(num=3) == [0, 1, 2]
+
+    @typehints(parser)
+    def get_phone(num=2):
+        # type: (num: int) -> set
+        return set([1, 2])
+    assert get_phone() == set([1, 2])

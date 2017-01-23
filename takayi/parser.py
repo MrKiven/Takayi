@@ -30,8 +30,10 @@ _transmit_mapping = {
     'int': int,
     'str': str,
     'dict': dict,
+    'list': list,
+    'tuple': tuple,
     'set': set,
-    'any': (int, str, dict, set)
+    'any': (int, str, dict, list, tuple, set)
 }
 
 
@@ -118,10 +120,7 @@ def typehints(parser, attach_cls=None):
                             hints.args, actually_args))
 
             ret = func(*args, **kwargs)
-            if isinstance(ret, (tuple, list, dict, set)):
-                actually_returns = map(lambda x: type(x), ret)
-            else:
-                actually_returns = map(lambda x: type(x), [ret])
+            actually_returns = map(lambda x: type(x), [ret])
             if not actually_returns == hints.returns:
                 raise ReturnTypeError(
                     "Expect => {}, Actually => {}".format(
