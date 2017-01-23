@@ -76,8 +76,9 @@ def typehints(parser):
         def __(*args):
             hints = parser.parse(func, deco=True)
             actually_args = map(lambda x: type(x), args)
-            assert actually_args == hints.args, "Parameter err: except => {}, "
-            "actually => {}".format(hints.args, actually_args)
+            assert actually_args == hints.args, \
+                "Parameter err: except => {}, actually => {}".format(
+                    hints.args, actually_args)
 
             ret = func(*args)
             try:
@@ -85,8 +86,9 @@ def typehints(parser):
                 actually_returns = map(lambda x: type(x), ret)
             except TypeError:
                 actually_returns = map(lambda x: type(x), [ret])
-            assert actually_returns == hints.returns, "Return err: except => "
-            "{}, actually => {}".format(hints.returns, actually_returns)
+            assert actually_returns == hints.returns, \
+                "Return err: except => {}, actually => {}".format(
+                    hints.returns, actually_returns)
 
             return ret
         return __
