@@ -43,5 +43,5 @@ def get_node():
 
 ## TODO
 
-- [ ] Support kwargs type check
+- [x] Support kwargs type check
 - [ ] More types. FYI: [pep484](https://www.python.org/dev/peps/pep-0484/)
