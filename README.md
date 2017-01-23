@@ -22,7 +22,7 @@ _sum = get_sum(1, 2)  # -> 3
 _err_sum = get_sum(1, 'hello')
 
 
-@typehints(parser):
+@typehints(parser)
 def test(x, y=1)
     # type: (int, y: int) -> int
     return x + y
