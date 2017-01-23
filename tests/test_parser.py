@@ -84,9 +84,16 @@ def test_custom_type(parser):
 def test_kwargs(parser):
     # not support yet..
 
+    @typehints(parser)
     def func(x, y=1):
         # type: (int, y: int) -> int
         return x + y
+
+    assert func(1, y=2) == 3
+    with pytest.raises(AssertionError):
+        assert func(1, y='hello')
+    with pytest.raises(AssertionError):
+        assert func('hello', y=10)
 
 
 def test_decorator(parser):

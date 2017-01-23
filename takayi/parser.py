@@ -20,7 +20,7 @@ START = 'start'
 
 parse_pattern = re.compile(r'''
     (?P<{}>[# type:]+)\(
-    (?P<args>[\w+, ]*)\).?->.?
+    (?P<args>[(\w+: )*\w+, ]*)\).?->.?
     (?P<return>[\w+, ]*)
     '''.format(START), re.X)
 
@@ -47,6 +47,8 @@ class TypeHints(object):
             self.transmit_mapping[name] = t_type
 
     def _get_type(self, t_type):
+        if ':' in t_type:
+            t_type = t_type.split(':')[-1].strip()
         try:
             return self.transmit_mapping[t_type]
         except KeyError:
@@ -101,17 +103,19 @@ def typehints(parser, attach_cls=None):
     """
     def _(func):
         @functools.wraps(func)
-        def __(*args):
+        def __(*args, **kwargs):
             hints = parser.parse(func, deco=True)
             if attach_cls:
                 hints.attach_type(attach_cls.__name__, attach_cls)
             actually_args = map(lambda x: type(x), args)
+            if kwargs:
+                actually_args += map(lambda x: type(x), kwargs.itervalues())
             if actually_args:
                 assert actually_args == hints.args, \
                     "Parameter err: except => {}, actually => {}".format(
                         hints.args, actually_args)
 
-            ret = func(*args)
+            ret = func(*args, **kwargs)
             if isinstance(ret, (tuple, list, dict, set)):
                 actually_returns = map(lambda x: type(x), ret)
             else:
