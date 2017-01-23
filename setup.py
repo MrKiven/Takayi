@@ -11,7 +11,7 @@ with open('requirements.txt') as f:
 
 setup(
     name="takayi",
-    version='0.1.0',
+    version='0.1.1',
     long_description=open('README.md').read(),
     author="Kiven",
     author_email="kiven.mr@gmail.com",
@@ -25,7 +25,4 @@ setup(
         'mock==1.0.1',
     ],
     install_requires=[],
-    classifiers=[
-        'Private :: Do Not Upload',
-    ]
 )
