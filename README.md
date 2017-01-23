@@ -1,7 +1,7 @@
 # Takayi
-Type hints for python 2.X
+Type hints for python 2.X.
 
-`takayi` means `high` in japanese..
+`takayi` means `high` in japanese.
 
 ## Usage
 
@@ -16,7 +16,7 @@ def get_sum(x, y):
     # type: (int, int) -> int
     return x + y
 
-_sum = get_sum(1, 2)  # -> 3
+_sum = get_sum(1, 2)  # result should be 3
 
 # AssertionError: Parameter err: expect => [<type 'int'>, <type 'int'>], actually => [<type 'int'>, <type 'str'>]
 _err_sum = get_sum(1, 'hello')
@@ -24,7 +24,7 @@ _err_sum = get_sum(1, 'hello')
 
 # ==================================================
 @typehints(parser)
-def test(x, y=1)
+def test(x, y=1):
     # type: (int, y: int) -> int
     return x + y
 
