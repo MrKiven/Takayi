@@ -32,7 +32,7 @@ def test_parse(parser):
 
     def another_test_func(x, y, z):
         # type: (int, str, int) -> int, str
-        return 'hello worlr'
+        return 'hello world'
 
     h_a = parser.parse(a_test_func)
     assert str(h_a) == \

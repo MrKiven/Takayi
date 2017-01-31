@@ -107,6 +107,7 @@ def typehints(parser, attach_cls=None):
     def mid_func(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
+            # mark param `deco` to `True`
             hints = parser.parse(func, deco=True)
             if attach_cls:
                 hints.attach_type(attach_cls.__name__, attach_cls)
