@@ -37,6 +37,10 @@ _transmit_mapping = {
 }
 
 
+class Disable(object):
+    pass
+
+
 class TypeHints(object):
 
     def __init__(self, func_name, arg_types, return_types):
@@ -109,6 +113,8 @@ def typehints(parser, attach_cls=None):
         def wrapper(*args, **kwargs):
             # mark param `deco` to `True`
             hints = parser.parse(func, deco=True)
+            if isinstance(hints, Disable):
+                return func(*args, **kwargs)
             if attach_cls:
                 hints.attach_type(attach_cls.__name__, attach_cls)
             actually_args = map(lambda x: type(x), args)
@@ -134,10 +140,17 @@ def typehints(parser, attach_cls=None):
 
 class Parser(object):
 
-    def __init__(self, pattern=parse_pattern):
+    def __init__(self, pattern=parse_pattern, enable=True):
         self._start = START
         self.pattern = pattern
         self.attached_types = {}
+        self.enable = enable
+
+    def set_enable(self):
+        self.enable = True
+
+    def set_disable(self):
+        self.enable = False
 
     def parse(self, func, deco=False):
         """Parse first line of 'docstring'
@@ -146,6 +159,8 @@ class Parser(object):
         :param deco: Only use when using `typehints` decorator
         :return: :class:`TypeHints`
         """
+        if not self.enable:
+            return Disable()
         line = 2 if deco else 1
         type_docs = inspect.getsourcelines(func)[0][line].strip()
         if not type_docs.startswith('# type:'):

@@ -4,7 +4,7 @@ from __future__ import absolute_import
 
 import pytest
 
-from takayi.parser import Parser, typehints
+from takayi.parser import Parser, typehints, Disable
 from takayi.exc import ParseTypeError, InvalidHintsError, \
     ParameterTypeError, ReturnTypeError
 
@@ -159,3 +159,20 @@ def test_iterable_struct(parser):
         # type: (num: int) -> set
         return set([1, 2])
     assert get_phone() == set([1, 2])
+
+
+def test_disable_typehints(parser):
+    parser.set_disable()
+
+    def test_func():
+        return 'hello'
+
+    type_hint = parser.parse(test_func)
+    assert isinstance(type_hint, Disable)
+
+    @typehints(parser)
+    def get_int():
+        # type: () -> int
+        return 110
+
+    assert get_int() == 110
