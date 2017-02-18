@@ -10,6 +10,13 @@ from takayi.parser import Parser, typehints
 
 parser = Parser()
 
+# default to enable typehints
+# disable typehints
+parser.set_disable()
+
+# enable
+parser.set_enable()
+
 # ==================================================
 @typehints(parser)
 def get_sum(x, y):
