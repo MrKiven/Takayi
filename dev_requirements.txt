@@ -1,5 +1,5 @@
 pylint==1.5.5
-pytest==2.8.2
+pytest==9.0.3
 pytest-cov==1.8.1
 pytest-xdist==1.13.1
 pylint-nose-checker==1.0.0

@@ -20,7 +20,7 @@ setup(
     packages=find_packages(),
     package_data={"": ["LICENSE"], "veskit": data},
     tests_require=[
-        'pytest==2.5.2',
+        'pytest==9.0.3',
         'pytest-cov==1.8.1',
         'pytest-xdist==1.13.1',
         'mock==1.0.1',
